@@ -5,7 +5,7 @@ node {
     checkout scm
     mvn 'clean package'
     dir('webapp/target') {stash name: 'war', includes: 'webapp.war'}
-    echo ${BRANCH_NAME}
+    sh 'printenv'
 }
 
 def mvn(args) {
