@@ -4,6 +4,7 @@ node {
       // Get some code from a GitHub repository
       git ([url: 'https://github.com/deepdivenow/pipeline-example.git', branch: 'master'])
       mvnHome = tool 'localMaven'
+      echo $BRANCH_NAME
    }
    stage('Build') {
       // Run the maven build
