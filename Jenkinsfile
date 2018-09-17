@@ -4,7 +4,7 @@
 
 node {
 
-    if (env.BRANCH_NAME ~= '^feature') {
+    if (env.BRANCH_NAME ==~ /^feature/) {
         checkout()
         build()
         unittest()
