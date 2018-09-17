@@ -3,7 +3,7 @@
 
 
 node {
-    println 'Branch:' env.BRANCH_NAME
+    println "Branch: ${env.BRANCH_NAME}"
 
     if (env.BRANCH_NAME ==~ /^feature/) {
         checkout()
