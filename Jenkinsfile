@@ -35,6 +35,10 @@ node {
     }
 }
 
+def deploy_to_production() {
+ // Need write deploy
+ println 'Deploy to PROD'
+}
 
 def checkout () {
     stage 'Checkout code'
