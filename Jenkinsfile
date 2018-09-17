@@ -4,7 +4,7 @@ stage 'Dev'
 node {
     checkout scm
     mvn 'clean package'
-    dir('target') {stash name: 'war', includes: '*.war'}
+    dir('webapp/target') {stash name: 'war', includes: 'webapp.war'}
     echo ${BRANCH_NAME}
 }
 
