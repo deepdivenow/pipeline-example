@@ -1,10 +1,11 @@
 #!groovy
 
 stage 'Dev'
-node ('docker-cloud') {
+node {
     checkout scm
     mvn 'clean package'
     dir('target') {stash name: 'war', includes: '*.war'}
+    echo ${BRANCH_NAME}
 }
 
 def mvn(args) {
