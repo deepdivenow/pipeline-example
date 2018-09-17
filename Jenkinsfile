@@ -66,6 +66,10 @@ def allTests() {
     }
 }
 
+def mvn(args) {
+    sh "${tool 'localMaven'}/bin/mvn ${args}"
+}
+
 /*  Example for testing code
 
 def allCodeQualityTests() {
