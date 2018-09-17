@@ -3,12 +3,13 @@
 
 
 node {
+    println env.BRANCH_NAME
 
     if (env.BRANCH_NAME ==~ /^feature/) {
         checkout()
         build()
         unittest()
-        codestyletest()
+        styleTest()
         codereview()
     }
     if (env.BRANCH_NAME == 'devel') {
@@ -53,6 +54,13 @@ def unitTest() {
     if (currentBuild.result == "UNSTABLE") {
         sh "exit 1"
     }
+}
+
+def styleTest() {
+   stage('Test CodeStyle')
+   // Run the maven codestyle
+   mvn '-Dmaven.test.failure.ignore checkstyle:checkstyle'
+   checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
 }
 
 def allTests() {
