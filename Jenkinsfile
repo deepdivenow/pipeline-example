@@ -10,7 +10,7 @@ node {
             checkout()
             build()
             unitTest()
-            styleTest2() // For code style test example must by moved to allCodeQualityTests in future
+            styleTest() // For code style test example must by moved to allCodeQualityTests in future
             mergerequest() //PR
         } catch (e) { // Execute on fail
             echo 'This will run only if failed'
