@@ -6,12 +6,20 @@ node {
     println "Branch: ${env.BRANCH_NAME}"
 
     if (env.BRANCH_NAME ==~ /feature.*/) {
-        checkout()
-        build()
-        unitTest()
-        styleTest() // For code style test example must by moved to allCodeQualityTests in future
-        mergerequest() //PR
-        notifyTeamLead()  // Notify Team lead in any negative situation
+        try {
+            checkout()
+            build()
+            unitTest()
+            styleTest2() // For code style test example must by moved to allCodeQualityTests in future
+            mergerequest() //PR
+        } catch { // Execute on fail
+            echo 'This will run only if failed'
+            // Since we're catching the exception in order to report on it,
+            // we need to re-throw it, to ensure that the build is marked as failed
+            throw e
+        } finally { // Always execute
+            notifyTeamLead()  // Notify Team lead in any negative situation
+        }
     }
     if (env.BRANCH_NAME == 'dev') {
         checkout()
