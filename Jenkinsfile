@@ -16,7 +16,7 @@ node {
             echo 'This will run only if failed'
             // Since we're catching the exception in order to report on it,
             // we need to re-throw it, to ensure that the build is marked as failed
-            throw e
+            //throw e
         } finally { // Always execute
             notifyTeamLead()  // Notify Team lead in any negative situation
         }
