@@ -16,39 +16,57 @@ node {
             echo 'This will run only if failed'
             // Since we're catching the exception in order to report on it,
             // we need to re-throw it, to ensure that the build is marked as failed
-            //throw e
+            throw e
         } finally { // Always execute
-            notifyTeamLead()  // Notify Team lead in any negative situation
+            notifyTeamLead()  // Notify Team lead in any situation
         }
     }
     if (env.BRANCH_NAME == 'dev') {
-        checkout()
-        build()
-        unitTest()
-//        allCodeQualityTests()
-        deploy_to_dev()
-        notifyQA()
-        notifyTeamLead()
+        try{
+            checkout()
+            build()
+            unitTest()
+//          allCodeQualityTests()
+            deploy_to_dev()
+        } catch (e) {
+            echo 'This will run only if failed'
+            throw e
+        } finally {
+            notifyQA()
+            notifyTeamLead()
+        }
     }
     if (env.BRANCH_NAME == 'release') {
-        checkout()
-        build()
-        allTests()
+        try{
+            checkout()
+            build()
+            allTests()
 //        allCodeQualityTests()
-        deploy_to_stage()
-        notifyTeamLead()
-        notifySecurity()
-        deploy_to_preprod()
-        notifyTeamLead()
-        notifyCustomer()
+            deploy_to_stage()
+            notifyTeamLead()
+            notifySecurity()
+            deploy_to_preprod()
+            notifyTeamLead()
+            notifyCustomer()
+        } catch (e) {
+
+        } finally {
+            notifyTeamLead()
+        }
     }
     if (env.BRANCH_NAME == 'master') {
-        checkout()
-        build()
-        allTests()
+        try{
+            checkout()
+            build()
+            allTests()
 //        allCodeQualityTests()
-        deploy_to_production()
-        notifyTeamLead()
+            deploy_to_production()
+            notifyTeamLead()
+        } catch (e) {
+
+        } finally {
+            notifyTeamLead()
+        }
     }
 }
 
