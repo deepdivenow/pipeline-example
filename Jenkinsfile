@@ -5,19 +5,22 @@
 node {
     println "Branch: ${env.BRANCH_NAME}"
 
-    if (env.BRANCH_NAME ==~ /^feature/) {
+    if (env.BRANCH_NAME ==~ /feature.*/) {
         checkout()
         build()
-        unittest()
-        styleTest()
-        codereview()
+        unitTest()
+        styleTest() // For code style test example must by moved to allCodeQualityTests in future
+        mergerequest() //PR
+        notifyTeamLead()  // Notify Team lead in any negative situation
     }
-    if (env.BRANCH_NAME == 'devel') {
+    if (env.BRANCH_NAME == 'dev') {
         checkout()
         build()
         unitTest()
 //        allCodeQualityTests()
-        deploy_to_devel()
+        deploy_to_dev()
+        notifyQA()
+        notifyTeamLead()
     }
     if (env.BRANCH_NAME == 'release') {
         checkout()
@@ -25,6 +28,11 @@ node {
         allTests()
 //        allCodeQualityTests()
         deploy_to_stage()
+        notifyTeamLead()
+        notifySecurity()
+        deploy_to_preprod()
+        notifyTeamLead()
+        notifyCustomer()
     }
     if (env.BRANCH_NAME == 'master') {
         checkout()
@@ -32,18 +40,62 @@ node {
         allTests()
 //        allCodeQualityTests()
         deploy_to_production()
+        notifyTeamLead()
     }
 }
 
+def notifyTeamLead()  {
+// Notify Team lead in any negative situation
+    stage 'notify TeamLead'
+}
+
+def notifyQA()  {
+// Notify QA in any negative situation
+    stage 'notify QA'
+}
+
+def notifySecurity() {
+// Notify Security if Release ready for security test
+    stage 'notify Security'
+}
+
+def notifyCustomer() {
+// Notify Customer if Release ready for security test
+    stage 'notify Customer'
+}
+
+def mergerequest() {
+    stage 'Merge Request'
+    // Merge Request to devel branch
+    println 'Merge Request to dev branch'
+
+}
+
 def deploy_to_production() {
+// Deploy to PROD
     stage 'Deploy to PROD'
-    // Need write deploy
     println 'Deploy to PROD'
+}
+
+def deploy_to_preprod(){
+// Deploy to Pre-PROD
+    stage 'Deploy to Pre-PROD'
+}
+
+def deploy_to_stage() {
+// Deploy to Stage
+    stage 'Deploy to Stage'
+}
+
+def deploy_to_dev() {
+// Deploy to Devel
+    stage 'Deploy to DEV'
 }
 
 def checkout () {
     stage 'Checkout code'
     checkout scm
+// !!! Need correct section about update branch status to gitlab in all sections !!!
 //    setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
 }
 
@@ -65,7 +117,15 @@ def styleTest() {
    stage('Test CodeStyle')
    // Run the maven codestyle
    mvn '-Dmaven.test.failure.ignore checkstyle:checkstyle'
-   checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
+   step([$class: 'CheckStylePublisher',
+      canRunOnFailed: true,
+      defaultEncoding: '',
+      healthy: '',
+      pattern: '',
+      unHealthy: '',
+      useStableBuildAsReference: true
+    ])
+//   checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
 }
 
 def allTests() {
