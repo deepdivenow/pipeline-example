@@ -6,7 +6,7 @@ node {
     println "Branch: ${env.BRANCH_NAME}"
 
     if (env.BRANCH_NAME ==~ /feature.*/) {
-        try {
+        try { // try block for notify TeamLead in ANY state
             checkout()
             build()
             unitTest()
@@ -49,7 +49,8 @@ node {
             notifyTeamLead()
             notifyCustomer()
         } catch (e) {
-
+            echo 'This will run only if failed'
+            throw e
         } finally {
             notifyTeamLead()
         }
@@ -63,7 +64,8 @@ node {
             deploy_to_production()
             notifyTeamLead()
         } catch (e) {
-
+            echo 'This will run only if failed'
+            throw e
         } finally {
             notifyTeamLead()
         }
