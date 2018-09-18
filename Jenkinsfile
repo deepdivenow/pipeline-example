@@ -12,7 +12,7 @@ node {
             unitTest()
             styleTest2() // For code style test example must by moved to allCodeQualityTests in future
             mergerequest() //PR
-        } catch { // Execute on fail
+        } catch (e) { // Execute on fail
             echo 'This will run only if failed'
             // Since we're catching the exception in order to report on it,
             // we need to re-throw it, to ensure that the build is marked as failed
